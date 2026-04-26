@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nightion Observability Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; padding: 2rem; }
+        .dashboard-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 350px 1fr; gap: 2rem; height: 90vh; }
+        .panel { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 12px; padding: 1.5rem; overflow-y: auto; }
+        
+        .trace-list-item { padding: 1rem; border-bottom: 1px solid #334155; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
+        .trace-list-item:hover { background: rgba(51, 65, 85, 0.5); }
+        .trace-list-item.active { background: rgba(51, 65, 85, 0.8); border-left-color: #3b82f6; }
+        
+        .status-ok { color: #10b981; }
+        .status-failed { color: #ef4444; }
+        .status-blocked { color: #f59e0b; }
+        .status-pending { color: #8b5cf6; }
+
+        .detail-view h2 { border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-top: 0; }
+        .block-card { background: #1e293b; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6; }
+        .block-card h3 { margin-top: 0; font-size: 1.1em; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .code-block { background: #0f172a; padding: 1rem; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; overflow-x: auto; color: #a5b4fc; }
+        
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8em; font-weight: bold; background: #334155; margin-right: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Nightion Observability Dashboard</h1>
+    
+    <div class="dashboard-container">
+        <div class="panel" id="sidebar">
+            <h3>Trace Lookup Index</h3>
+            <div id="index-list">Loading traces...</div>
+        </div>
+        
+        <div class="panel detail-view" id="main-view">
+            <h2 id="trace-title">Select a Trace ID</h2>
+            <div id="trace-content"></div>
+        </div>
+    </div>
+
+    <script src="logs.js"></script>
+</body>
+</html>

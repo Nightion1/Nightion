@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Database files
+*.db
+*.sqlite3
+
+# Cache
+cache/
+chroma_db/
+
+# Memory / brain backups
+memory/
+brain_backups/
+test_brain_backups/
+nightion_memory/
+
+# Logs
+logs/
+
+# Test results
+pytest_*.txt
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Archives
+*.zip
+
+# Config (may contain secrets)
+config.json
+
+# Batch shortcuts
+*.lnk
+*.vbs

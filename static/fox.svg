@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" id="nightion-fox">
+  <defs>
+    <!-- Orange glow filter -->
+    <filter id="fox-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Stronger glow for speaking state -->
+    <filter id="fox-glow-strong" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="eye-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <clipPath id="fox-clip">
+      <!-- MAIN FACE polygon to clip the internal rain -->
+      <polygon points="20,20 100,140 200,100 300,140 380,20 380,160 200,380 20,160" />
+    </clipPath>
+  </defs>
+
+  <!-- Base back layer to make sure it's dark -->
+  <polygon points="20,20 100,140 200,100 300,140 380,20 380,160 200,380 20,160" fill="#040200" />
+
+  <!-- Matrix rain clipped to the fox head -->
+  <g clip-path="url(#fox-clip)" font-family="monospace" font-weight="bold" font-size="20">
+
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="3.13s" repeatCount="indefinite" />
+      <text x="12" y="-38">
+        <tspan x="12" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.95">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.89">9</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.84">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.79">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.74">1</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.68">4</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.63">7</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.58">4</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.53">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.47">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.42">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.37">7</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.31">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.26">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.21">1</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.16">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.10">1</tspan>
+      </text>
+      <text x="12" y="-438">
+        <tspan x="12" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.95">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.89">9</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.84">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.79">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.74">1</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.68">4</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.63">7</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.58">4</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.53">2</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.47">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.42">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.37">7</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.31">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.26">8</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.21">1</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.16">5</tspan>\n      <tspan x="12" dy="20" fill="#FF6B00" opacity="0.10">1</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="4.35s" repeatCount="indefinite" />
+      <text x="37" y="-358">
+        <tspan x="37" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.93">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.86">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.80">4</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.73">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.66">0</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.59">1</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.53">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.46">3</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.39">2</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.32">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.25">9</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.19">3</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.12">9</tspan>
+      </text>
+      <text x="37" y="-758">
+        <tspan x="37" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.93">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.86">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.80">4</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.73">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.66">0</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.59">1</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.53">7</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.46">3</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.39">2</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.32">5</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.25">9</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.19">3</tspan>\n      <tspan x="37" dy="20" fill="#FF6B00" opacity="0.12">9</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="4.77s" repeatCount="indefinite" />
+      <text x="62" y="-79">
+        <tspan x="62" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.94">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.87">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.81">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.75">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.68">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.62">3</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.56">2</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.49">4</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.43">8</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.37">2</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.30">7</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.24">8</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.18">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.11">9</tspan>
+      </text>
+      <text x="62" y="-479">
+        <tspan x="62" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.94">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.87">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.81">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.75">1</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.68">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.62">3</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.56">2</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.49">4</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.43">8</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.37">2</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.30">7</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.24">8</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.18">6</tspan>\n      <tspan x="62" dy="20" fill="#FF6B00" opacity="0.11">9</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="4.79s" repeatCount="indefinite" />
+      <text x="87" y="-358">
+        <tspan x="87" dy="20" fill="#FFD1A9" opacity="1.00">1</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.94">9</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.88">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.82">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.76">6</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.70">1</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.64">6</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.58">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.53">4</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.47">3</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.41">9</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.35">2</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.29">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.23">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.17">4</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.11">6</tspan>
+      </text>
+      <text x="87" y="-758">
+        <tspan x="87" dy="20" fill="#FFD1A9" opacity="1.00">1</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.94">9</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.88">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.82">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.76">6</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.70">1</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.64">6</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.58">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.53">4</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.47">3</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.41">9</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.35">2</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.29">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.23">7</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.17">4</tspan>\n      <tspan x="87" dy="20" fill="#FF6B00" opacity="0.11">6</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.84s" repeatCount="indefinite" />
+      <text x="112" y="-157">
+        <tspan x="112" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.94">9</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.89">6</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.83">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.78">7</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.72">2</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.66">1</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.61">4</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.55">2</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.50">4</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.44">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.39">3</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.33">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.27">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.22">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.16">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.11">8</tspan>
+      </text>
+      <text x="112" y="-557">
+        <tspan x="112" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.94">9</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.89">6</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.83">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.78">7</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.72">2</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.66">1</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.61">4</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.55">2</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.50">4</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.44">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.39">3</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.33">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.27">8</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.22">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.16">0</tspan>\n      <tspan x="112" dy="20" fill="#FF6B00" opacity="0.11">8</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="3.64s" repeatCount="indefinite" />
+      <text x="137" y="-204">
+        <tspan x="137" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.93">9</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.85">1</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.78">6</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.71">8</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.63">5</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.56">1</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.49">8</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.42">3</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.34">4</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.27">3</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.20">9</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.12">7</tspan>
+      </text>
+      <text x="137" y="-604">
+        <tspan x="137" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.93">9</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.85">1</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.78">6</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.71">8</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.63">5</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.56">1</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.49">8</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.42">3</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.34">4</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.27">3</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.20">9</tspan>\n      <tspan x="137" dy="20" fill="#FF6B00" opacity="0.12">7</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="3.68s" repeatCount="indefinite" />
+      <text x="162" y="-326">
+        <tspan x="162" dy="20" fill="#FFD1A9" opacity="1.00">2</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.93">4</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.85">9</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.78">9</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.71">3</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.63">5</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.56">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.49">6</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.42">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.34">6</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.27">5</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.20">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.12">5</tspan>
+      </text>
+      <text x="162" y="-726">
+        <tspan x="162" dy="20" fill="#FFD1A9" opacity="1.00">2</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.93">4</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.85">9</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.78">9</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.71">3</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.63">5</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.56">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.49">6</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.42">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.34">6</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.27">5</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.20">8</tspan>\n      <tspan x="162" dy="20" fill="#FF6B00" opacity="0.12">5</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.80s" repeatCount="indefinite" />
+      <text x="187" y="-123">
+        <tspan x="187" dy="20" fill="#FFD1A9" opacity="1.00">3</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.92">5</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.84">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.76">3</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.68">8</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.60">8</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.53">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.45">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.37">2</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.29">9</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.21">6</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.13">0</tspan>
+      </text>
+      <text x="187" y="-523">
+        <tspan x="187" dy="20" fill="#FFD1A9" opacity="1.00">3</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.92">5</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.84">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.76">3</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.68">8</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.60">8</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.53">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.45">7</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.37">2</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.29">9</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.21">6</tspan>\n      <tspan x="187" dy="20" fill="#FF6B00" opacity="0.13">0</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.95s" repeatCount="indefinite" />
+      <text x="212" y="-249">
+        <tspan x="212" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.93">6</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.85">7</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.78">0</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.71">9</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.63">4</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.56">0</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.49">1</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.42">7</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.34">9</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.27">1</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.20">6</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.12">0</tspan>
+      </text>
+      <text x="212" y="-649">
+        <tspan x="212" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.93">6</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.85">7</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.78">0</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.71">9</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.63">4</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.56">0</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.49">1</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.42">7</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.34">9</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.27">1</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.20">6</tspan>\n      <tspan x="212" dy="20" fill="#FF6B00" opacity="0.12">0</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.60s" repeatCount="indefinite" />
+      <text x="237" y="-44">
+        <tspan x="237" dy="20" fill="#FFD1A9" opacity="1.00">7</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.92">0</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.84">5</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.76">6</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.68">1</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.60">3</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.53">3</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.45">1</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.29">7</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.21">5</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.13">0</tspan>
+      </text>
+      <text x="237" y="-444">
+        <tspan x="237" dy="20" fill="#FFD1A9" opacity="1.00">7</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.92">0</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.84">5</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.76">6</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.68">1</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.60">3</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.53">3</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.45">1</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.29">7</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.21">5</tspan>\n      <tspan x="237" dy="20" fill="#FF6B00" opacity="0.13">0</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.93s" repeatCount="indefinite" />
+      <text x="262" y="-281">
+        <tspan x="262" dy="20" fill="#FFD1A9" opacity="1.00">4</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.94">0</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.89">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.83">3</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.78">9</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.72">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.66">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.61">1</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.55">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.50">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.44">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.39">3</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.33">1</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.27">4</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.22">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.16">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.11">5</tspan>
+      </text>
+      <text x="262" y="-681">
+        <tspan x="262" dy="20" fill="#FFD1A9" opacity="1.00">4</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.94">0</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.89">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.83">3</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.78">9</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.72">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.66">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.61">1</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.55">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.50">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.44">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.39">3</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.33">1</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.27">4</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.22">2</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.16">8</tspan>\n      <tspan x="262" dy="20" fill="#FF6B00" opacity="0.11">5</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="3.79s" repeatCount="indefinite" />
+      <text x="287" y="-205">
+        <tspan x="287" dy="20" fill="#FFD1A9" opacity="1.00">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.95">7</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.89">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.84">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.79">9</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.74">7</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.68">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.63">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.58">5</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.53">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.47">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.42">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.37">1</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.31">6</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.26">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.21">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.16">5</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.10">5</tspan>
+      </text>
+      <text x="287" y="-605">
+        <tspan x="287" dy="20" fill="#FFD1A9" opacity="1.00">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.95">7</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.89">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.84">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.79">9</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.74">7</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.68">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.63">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.58">5</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.53">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.47">3</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.42">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.37">1</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.31">6</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.26">0</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.21">4</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.16">5</tspan>\n      <tspan x="287" dy="20" fill="#FF6B00" opacity="0.10">5</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="2.52s" repeatCount="indefinite" />
+      <text x="312" y="-327">
+        <tspan x="312" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.95">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.89">2</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.84">8</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.79">7</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.74">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.68">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.63">7</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.58">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.53">0</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.47">8</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.42">2</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.31">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.26">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.21">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.16">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.10">4</tspan>
+      </text>
+      <text x="312" y="-727">
+        <tspan x="312" dy="20" fill="#FFD1A9" opacity="1.00">0</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.95">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.89">2</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.84">8</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.79">7</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.74">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.68">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.63">7</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.58">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.53">0</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.47">8</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.42">2</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.31">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.26">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.21">6</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.16">9</tspan>\n      <tspan x="312" dy="20" fill="#FF6B00" opacity="0.10">4</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="3.60s" repeatCount="indefinite" />
+      <text x="337" y="-61">
+        <tspan x="337" dy="20" fill="#FFD1A9" opacity="1.00">4</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.93">3</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.85">6</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.78">2</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.71">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.63">8</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.56">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.49">7</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.42">8</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.34">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.27">9</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.20">9</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.12">2</tspan>
+      </text>
+      <text x="337" y="-461">
+        <tspan x="337" dy="20" fill="#FFD1A9" opacity="1.00">4</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.93">3</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.85">6</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.78">2</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.71">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.63">8</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.56">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.49">7</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.42">8</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.34">1</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.27">9</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.20">9</tspan>\n      <tspan x="337" dy="20" fill="#FF6B00" opacity="0.12">2</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="4.88s" repeatCount="indefinite" />
+      <text x="362" y="-151">
+        <tspan x="362" dy="20" fill="#FFD1A9" opacity="1.00">2</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.94">8</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.88">8</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.82">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.76">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.70">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.64">6</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.58">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.53">1</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.47">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.41">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.35">1</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.29">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.23">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.17">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.11">9</tspan>
+      </text>
+      <text x="362" y="-551">
+        <tspan x="362" dy="20" fill="#FFD1A9" opacity="1.00">2</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.94">8</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.88">8</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.82">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.76">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.70">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.64">6</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.58">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.53">1</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.47">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.41">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.35">1</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.29">4</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.23">5</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.17">7</tspan>\n      <tspan x="362" dy="20" fill="#FF6B00" opacity="0.11">9</tspan>
+      </text>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 -400" to="0 400" dur="4.38s" repeatCount="indefinite" />
+      <text x="387" y="-340">
+        <tspan x="387" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.94">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.87">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.81">8</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.75">7</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.68">0</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.62">9</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.56">3</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.49">1</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.43">1</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.30">8</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.24">3</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.18">2</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.11">3</tspan>
+      </text>
+      <text x="387" y="-740">
+        <tspan x="387" dy="20" fill="#FFD1A9" opacity="1.00">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.94">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.87">5</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.81">8</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.75">7</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.68">0</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.62">9</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.56">3</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.49">1</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.43">1</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.37">4</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.30">8</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.24">3</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.18">2</tspan>\n      <tspan x="387" dy="20" fill="#FF6B00" opacity="0.11">3</tspan>
+      </text>
+    </g>
+  </g>
+
+  <!-- Fox Outline and details to keep the shape defined -->
+  <g filter="url(#fox-glow)">
+    <polygon
+      points="20,20 100,140 200,100 300,140 380,20 380,160 200,380 20,160"
+      fill="none"
+      stroke="#FF6B00"
+      stroke-width="3"
+      stroke-linejoin="round"
+    />
+    
+    <!-- LEFT EAR outline -->
+    <polygon points="90,40 60,130 145,115" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linejoin="round"/>
+    <!-- LEFT EAR dark backing -->
+    <polygon points="93,60 72,120 138,108" fill="#0d0500" opacity="0.9" />
+
+    <!-- RIGHT EAR outline -->
+    <polygon points="310,40 340,130 255,115" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linejoin="round"/>
+    <!-- RIGHT EAR dark backing -->
+    <polygon points="307,60 328,120 262,108" fill="#0d0500" opacity="0.9" />
+
+
+  </g>
+
+
+
+</svg>

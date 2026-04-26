@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Nightion AI</title>
+  <title>Nightion V29.5</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,15 +19,17 @@
       <button class="nav-icon active" title="Chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
       </button>
-      <button class="nav-icon" id="btn-teach-modal" title="Memory">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
-      </button>
+
       <button class="nav-icon" id="btn-run-modal" title="Run Python Code">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </button>
+      <button class="nav-icon" id="btn-traces-modal" title="Telemetry Traces (XAI)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg>
       </button>
       <button class="nav-icon" id="btn-stats" title="System Stats">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
       </button>
+
     </div>
     <div class="sidebar-bottom">
       <div class="status-dot online" id="status-dot" title="Connecting..."></div>
@@ -39,97 +41,304 @@
 
   <!-- Main Content -->
   <main class="main-view">
-    
-    <!-- Holographic Speaking Fox Visualizer -->
-    <div id="fox-speaking-container">
-      <div id="fox-speaking-logo">
-        <canvas id="fox-speaking-canvas"></canvas>
-      </div>
-      <svg id="fox-speaking-outline" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <polygon points="5,5 25,35 50,25 75,35 95,5 95,40 50,95 5,40" />
-      </svg>
+
+    <!-- ══ MODE SWITCHER BAR ══ -->
+    <div class="mode-switcher-bar" id="mode-switcher-bar">
+      <button class="mode-tab mode-tab--active" data-mode="chat" id="tab-chat" title="Chat Mode">
+        <span class="mode-tab-icon">💬</span>
+        <span class="mode-tab-label">Chat</span>
+      </button>
+      <button class="mode-tab" data-mode="voice" id="tab-voice" title="Voice / Fox Mode">
+        <span class="mode-tab-icon">🦊</span>
+        <span class="mode-tab-label">Voice</span>
+      </button>
+      <button class="mode-tab" data-mode="writer" id="tab-writer" title="Writer Mode">
+        <span class="mode-tab-icon">✍️</span>
+        <span class="mode-tab-label">Writer</span>
+      </button>
+      <button class="mode-tab" data-mode="smartcursor" id="tab-smartcursor" title="Smart Cursor Mode">
+        <span class="mode-tab-icon">🎯</span>
+        <span class="mode-tab-label">Smart Cursor</span>
+      </button>
     </div>
 
-    <!-- Top-Right Matrix Fox -->
-    <div id="fox-matrix-logo" title="Nightion Core">
-      <canvas id="fox-canvas"></canvas>
-    </div>
+    <!-- ══ CHAT PANEL (existing UI — untouched) ══ -->
+    <div id="chat-panel" class="mode-panel">
 
-    <div class="chat-container">
-      
-      <!-- Empty State -->
-      <div class="welcome-screen" id="welcome-screen">
-        <div id="center-fox-logo" title="Nightion Core">
-          <canvas id="center-fox-canvas"></canvas>
+      <!-- Holographic Speaking Fox Visualizer -->
+      <div id="fox-speaking-container">
+        <div id="fox-speaking-logo">
+          <canvas id="fox-speaking-canvas"></canvas>
         </div>
-        <h1 class="welcome-title">Welcome to <span class="accent-text">Nightion</span><br>Your AI Coding Assistant</h1>
-        <p class="welcome-subtitle">Write code, fix bugs, and get instant solutions in real-time.</p>
+        <svg id="fox-speaking-outline" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polygon points="5,5 25,35 50,25 75,35 95,5 95,40 50,95 5,40" />
+        </svg>
+      </div>
+
+      <!-- Top-Right Matrix Fox -->
+      <div id="fox-matrix-logo" title="Nightion Core">
+        <canvas id="fox-canvas"></canvas>
+      </div>
+
+      <div class="chat-container">
         
-        <div class="suggestion-grid">
-          <div class="sugg-card" onclick="document.getElementById('chat-input').value='Write a binary search in Python'; document.getElementById('btn-send').click();">
-            <span class="sugg-icon">🐍</span>
-            <p>Write a binary search script for my algorithmic test.</p>
+        <!-- Empty State -->
+        <div class="welcome-screen" id="welcome-screen">
+          <div id="center-fox-logo" title="Nightion Core">
+            <canvas id="center-fox-canvas"></canvas>
           </div>
-          <div class="sugg-card" onclick="document.getElementById('chat-input').value='Explain how React hooks work'; document.getElementById('btn-send').click();">
-            <span class="sugg-icon">⚛️</span>
-            <p>Show me an example of how React Hooks handle state.</p>
+          <h1 class="welcome-title">Welcome to <span class="accent-text">Nightion</span><br>Your AI Coding Assistant</h1>
+          <p class="welcome-subtitle">Write code, fix bugs, and get instant solutions in real-time.</p>
+          
+          <div class="suggestion-grid">
+            <div class="sugg-card" onclick="document.getElementById('chat-input').value='Write a binary search in Python'; document.getElementById('btn-send').click();">
+              <span class="sugg-icon">🐍</span>
+              <p>Write a binary search script for my algorithmic test.</p>
+            </div>
+            <div class="sugg-card" onclick="document.getElementById('chat-input').value='Explain how React hooks work'; document.getElementById('btn-send').click();">
+              <span class="sugg-icon">⚛️</span>
+              <p>Show me an example of how React Hooks handle state.</p>
+            </div>
+            <div class="sugg-card" onclick="document.getElementById('chat-input').value='How do I reverse a string in JS?'; document.getElementById('btn-send').click();">
+              <span class="sugg-icon">⚡</span>
+              <p>Explain how to reverse a string in JS without built-ins.</p>
+            </div>
           </div>
-          <div class="sugg-card" onclick="document.getElementById('chat-input').value='How do I reverse a string in JS?'; document.getElementById('btn-send').click();">
-            <span class="sugg-icon">⚡</span>
-            <p>Explain how to reverse a string in JS without built-ins.</p>
+        </div>
+
+        <!-- Scrollable Message Area -->
+        <div class="messages-area hidden" id="messages"></div>
+
+        <!-- Input Bar -->
+        <div class="input-wrapper">
+
+
+          <div class="input-box">
+            <button class="btn-voice" id="btn-voice" title="Voice Input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </button>
+            
+            <textarea id="chat-input" placeholder="Ask Nightion anything about code..." rows="1"></textarea>
+            
+            <button class="btn-send" id="btn-send">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
           </div>
+          <div class="input-meta">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <span id="typing-indicator" class="hidden indicator-text">Nightion is thinking...</span>
+              <span id="speaking-indicator" class="hidden speaking-glow">
+                🔊 Speaking 
+                <button id="btn-stop-speech" style="background:none;border:none;color:#ef4444;text-decoration:underline;cursor:pointer;margin-left:8px;font-size:11px;">Stop</button>
+              </span>
+              <label class="rag-toggle"><input type="checkbox" id="rag-toggle" checked> Memory Sync (<span id="memory-count">0</span> chunks)</label>
+            </div>
+            <span id="status-text" class="status-indicator">Connecting...</span>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /#chat-panel -->
+
+    <!-- ══ VOICE PANEL ══ -->
+    <div id="voice-panel" class="mode-panel mode-panel--hidden">
+      <!-- Full-screen matrix rain canvas (behind fox) -->
+      <canvas id="voice-matrix-canvas"></canvas>
+
+      <!-- Fox avatar (SVG img layered over canvas) -->
+      <div id="fox-avatar-wrap" class="state-idle">
+        <img id="fox-svg-img" src="/static/fox.svg" alt="Nightion Fox" draggable="false">
+      </div>
+
+      <!-- Subtitle bar -->
+      <div id="fox-subtitle">Click the fox or press Space to speak...</div>
+
+      <!-- Mic indicator (bottom-right corner) -->
+      <div id="voice-mic-dot" title="Microphone Status"></div>
+    </div><!-- /#voice-panel -->
+
+    <!-- ══ WRITER PANEL ══ -->
+    <div id="writer-panel" class="mode-panel mode-panel--hidden">
+
+      <!-- Left: Chat panel (40%) -->
+      <div class="writer-left">
+        <div class="writer-left-header">
+          <span class="writer-panel-title">💬 Chat</span>
+          <div class="writer-header-actions">
+            <button class="writer-tool-btn" id="see-code-btn" title="Ctrl+Shift+V — Capture screen & generate code">👁️ See &amp; Code</button>
+          </div>
+        </div>
+        <div class="wchat-list" id="writer-chat-list">
+          <div class="wchat-bubble wchat-system">Writer Mode active. Ask me to write code, or press Ctrl+Shift+V to capture your screen.</div>
+        </div>
+        <div class="writer-input-row">
+          <textarea id="writer-chat-input" placeholder="Ask Nightion to write code..." rows="2"></textarea>
+          <button id="writer-send-btn" class="writer-send">▶</button>
         </div>
       </div>
 
-      <!-- Scrollable Message Area -->
-      <div class="messages-area hidden" id="messages"></div>
-
-      <!-- Input Bar -->
-      <div class="input-wrapper">
-        <div class="input-box">
-          <button class="btn-voice" id="btn-voice" title="Voice Input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-          </button>
-          
-          <textarea id="chat-input" placeholder="Ask Nightion anything about code..." rows="1"></textarea>
-          
-          <button class="btn-send" id="btn-send">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-          </button>
-        </div>
-        <div class="input-meta">
-          <div style="display:flex; align-items:center; gap:16px;">
-            <span id="typing-indicator" class="hidden indicator-text">Nightion is thinking...</span>
-            <span id="speaking-indicator" class="hidden speaking-glow">
-              🔊 Speaking 
-              <button id="btn-stop-speech" style="background:none;border:none;color:#ef4444;text-decoration:underline;cursor:pointer;margin-left:8px;font-size:11px;">Stop</button>
-            </span>
-            <label class="rag-toggle"><input type="checkbox" id="rag-toggle" checked> Memory Sync (<span id="memory-count">0</span> chunks)</label>
+      <!-- Right: Monaco + Toolbar + Output (60%) -->
+      <div class="writer-right">
+        <!-- Toolbar -->
+        <div class="writer-toolbar">
+          <div class="writer-toolbar-left">
+            <select id="writer-lang-select" class="writer-lang-select">
+              <option value="python" selected>Python</option>
+              <option value="cpp">C++</option>
+              <option value="c">C</option>
+              <option value="java">Java</option>
+              <option value="javascript">JavaScript</option>
+              <option value="typescript">TypeScript</option>
+              <option value="csharp">C#</option>
+              <option value="go">Go</option>
+              <option value="rust">Rust</option>
+              <option value="sql">SQL</option>
+            </select>
+            <span class="writer-lang-label" id="writer-lang-label">Python</span>
           </div>
-          <span id="status-text" class="status-indicator">Connecting...</span>
+          <div class="writer-toolbar-right">
+            <button class="writer-tool-btn" id="writer-run-btn" title="Run code">▶ Run</button>
+            <button class="writer-tool-btn btn-hidden" id="type-anywhere-btn" title="Type code at cursor position">⌨️ Type Anywhere (5s)</button>
+          </div>
+        </div>
+
+        <!-- Monaco Editor container -->
+        <div id="monaco-container"></div>
+
+        <!-- Output Panel -->
+        <div class="writer-output-wrap">
+          <div class="writer-output-header">
+            <span>⚡ Output</span>
+            <button class="writer-tool-btn" id="writer-clear-output">Clear</button>
+          </div>
+          <div class="writer-output-panel" id="writer-output-panel">(no output yet)</div>
         </div>
       </div>
 
-    </div>
+      <!-- Screenshot countdown overlay -->
+      <div id="vision-countdown-overlay" class="countdown-overlay overlay-hidden">
+        <div class="countdown-box">
+          <div class="countdown-emoji">📸</div>
+          <div class="countdown-title">Capturing screen in</div>
+          <div class="countdown-number" id="capture-countdown-num">3</div>
+          <div class="countdown-hint">Press ESC to cancel</div>
+        </div>
+      </div>
+
+      <!-- Type Anywhere countdown overlay -->
+      <div id="type-countdown-overlay" class="countdown-overlay overlay-hidden">
+        <div class="countdown-box">
+          <div class="countdown-emoji">📍</div>
+          <div class="countdown-title">Place cursor in target — typing in</div>
+          <div class="countdown-number" id="type-countdown-num">5</div>
+          <div class="countdown-hint">Press ESC to cancel</div>
+        </div>
+      </div>
+
+    </div><!-- /#writer-panel -->
+
+    <!-- ══ SMART CURSOR PANEL ══ -->
+    <div id="smartcursor-panel" class="mode-panel mode-panel--hidden">
+
+      <!-- Ambient particle canvas (fullscreen bg) -->
+      <canvas id="sc-particles-canvas"></canvas>
+
+      <!-- Top control strip -->
+      <div class="sc-control-strip">
+        <div class="sc-control-left">
+          <div class="sc-status-badge" id="sc-status-badge">
+            <span class="sc-status-dot"></span>
+            <span class="sc-status-text" id="sc-status-text">Ready</span>
+          </div>
+          <select id="sc-lang-select" class="sc-lang-select">
+            <option value="python" selected>Python</option>
+            <option value="cpp">C++</option>
+            <option value="c">C</option>
+            <option value="java">Java</option>
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="csharp">C#</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+            <option value="sql">SQL</option>
+          </select>
+        </div>
+        <div class="sc-control-right">
+          <button class="sc-btn sc-btn--secondary" id="sc-clear-btn" title="Clear history">🗑️ Clear</button>
+          <button class="sc-btn sc-btn--primary" id="sc-capture-btn" title="Capture screen region">📸 Capture</button>
+        </div>
+      </div>
+
+      <!-- Main content: split layout -->
+      <div class="sc-layout">
+
+        <!-- Left: context + suggestions panel -->
+        <div class="sc-sidebar">
+          <div class="sc-sidebar-section">
+            <div class="sc-section-title">🧠 Context</div>
+            <div class="sc-context-display" id="sc-context-display">
+              <div class="sc-empty-state">No context captured yet.<br>Click <strong>📸 Capture</strong> or type a question below.</div>
+            </div>
+          </div>
+
+          <div class="sc-sidebar-section">
+            <div class="sc-section-title">💡 Suggestions</div>
+            <div class="sc-suggestions-list" id="sc-suggestions-list">
+              <div class="sc-suggestion-card sc-suggestion--placeholder">
+                <span class="sc-suggestion-icon">⚡</span>
+                <span>Ask a question or capture screen to get AI suggestions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: main interaction area -->
+        <div class="sc-main">
+          <!-- Response display -->
+          <div class="sc-response-area" id="sc-response-area">
+            <div class="sc-hero">
+              <div class="sc-hero-icon">🎯</div>
+              <h2 class="sc-hero-title">Smart Cursor</h2>
+              <p class="sc-hero-subtitle">AI-powered contextual code assistant.<br>Capture your screen, ask questions, get instant solutions.</p>
+              <div class="sc-hero-shortcuts">
+                <div class="sc-shortcut-pill"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> Capture</div>
+                <div class="sc-shortcut-pill"><kbd>Enter</kbd> Send question</div>
+                <div class="sc-shortcut-pill"><kbd>Ctrl</kbd>+<kbd>K</kbd> Quick action</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input bar -->
+          <div class="sc-input-bar">
+            <div class="sc-input-box">
+              <textarea id="sc-input" placeholder="Ask about code on screen, or describe what you need..." rows="1"></textarea>
+              <button id="sc-send-btn" class="sc-send-btn" title="Send">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+            <div class="sc-input-meta">
+              <span class="sc-meta-hint">Powered by gemma4 · Fully Offline</span>
+              <span class="sc-meta-counter" id="sc-token-counter"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Capture countdown overlay -->
+      <div id="sc-capture-overlay" class="countdown-overlay overlay-hidden">
+        <div class="countdown-box">
+          <div class="countdown-emoji">🎯</div>
+          <div class="countdown-title">Capturing screen in</div>
+          <div class="countdown-number" id="sc-capture-countdown">3</div>
+          <div class="countdown-hint">Press ESC to cancel</div>
+        </div>
+      </div>
+
+    </div><!-- /#smartcursor-panel -->
+
   </main>
 
-  <!-- Modals -->
-  <div class="modal-overlay hidden" id="teach-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span>🧠 Teach Nightion</span>
-        <button class="btn-close" id="close-teach">✕</button>
-      </div>
-      <p class="modal-desc">Paste code, docs, or facts here. Nightion remembers this permanently.</p>
-      <textarea id="learn-input" class="modal-text" rows="5" placeholder="Memory payload..."></textarea>
-      <div class="modal-actions">
-        <input id="learn-source" class="modal-input" placeholder="Source label (optional)">
-        <button class="btn-accent" id="btn-learn">TEACH</button>
-      </div>
-      <div id="learn-status" class="hidden status-msg"></div>
-      <button class="btn-link" id="btn-clear-memory">Wipe All Memory</button>
-    </div>
-  </div>
 
   <div class="modal-overlay hidden" id="runner-modal">
     <div class="modal-card">
@@ -153,6 +362,29 @@
     </div>
   </div>
 
+  <div class="modal-overlay hidden" id="traces-modal">
+    <div class="modal-card wide-modal">
+      <div class="modal-header">
+        <span>👁️ Live Execution Traces (XAI)</span>
+        <button class="btn-close" id="close-traces">✕</button>
+      </div>
+      <div class="traces-container">
+        <div class="traces-list" id="traces-list">
+          <!-- Populated dynamically via app.js -->
+        </div>
+        <div class="trace-viewer" id="trace-viewer">
+          <p class="trace-placeholder">Select a recent trace log to inspect its cognitive timeline natively.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <script src="/static/app.js"></script>
+  <script src="/static/voice_mode.js"></script>
+  <script src="/static/writer_mode.js"></script>
+  <script src="/static/smart_cursor.js"></script>
+  <script src="/static/mode_switcher.js"></script>
 </body>
 </html>

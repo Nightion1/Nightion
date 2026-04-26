@@ -1,0 +1,1374 @@
+================================================================================
+                       NIGHTION — PROJECT DOCUMENTATION
+           A Fully Offline AI Coding Assistant Built by Nitin
+================================================================================
+
+Version:       30.0
+Model:         gemma4 (via Ollama, running entirely offline)
+Server:        FastAPI + Uvicorn on http://127.0.0.1:8999
+Language:      Python 3.10+
+Frontend:      Vanilla HTML/CSS/JS served as static files
+
+
+================================================================================
+  TABLE OF CONTENTS
+================================================================================
+
+  1.  PROJECT OVERVIEW
+  2.  ARCHITECTURE OVERVIEW
+  3.  DIRECTORY STRUCTURE
+  4.  CORE MODULES
+      4.1   nightion_core.py     — FastAPI Application & API Endpoints
+      4.2   orchestrator.py      — Query Orchestration & LLM Streaming
+      4.3   tool_router.py       — Semantic Intent Classification
+      4.4   llm_adapter.py       — Hybrid RAG Intelligence Brain
+      4.5   schemas.py           — Pydantic Data Models & Enums
+      4.6   config.py            — Environment-Based Configuration
+  5.  MEMORY & KNOWLEDGE SYSTEM
+      5.1   memory_core.py       — SQLite Truth Graph
+      5.2   memory_manager.py    — JSON-Based Stable Memory
+      5.3   knowledge_base.py    — Topic-Hashed Knowledge Store
+      5.4   knowledge_graph.py   — Concept Graph with Confidence Dynamics
+      5.5   vector_store.py      — ChromaDB Vector Intelligence
+      5.6   context_injector.py  — Knowledge Context Injection
+      5.7   retrieval_governor.py— Domain-Filtered Retrieval
+  6.  SECURITY & SAFETY
+      6.1   guards.py            — Action Risk Evaluation & Safety Pre-Check
+      6.2   sandbox.py           — Isolated Python Execution
+      6.3   coding_sandbox.py    — Patch-Based Code Modification Sandbox
+      6.4   capability_policy.py — Capability Levels & Execution Gates
+      6.5   tool_permissions.py  — Tool Permission Contracts
+      6.6   verifier.py          — Tri-State Verification Layer
+  7.  TOOL SYSTEM
+      7.1   tool_action_manager.py — Central Tool Execution Registry
+      7.2   tools/code_runner.py   — Python Code Execution Tool
+      7.3   tools/search.py        — Web Search Tool
+      7.4   tools/desktop.py       — Desktop/App Control Tool
+  8.  DESKTOP & VISION
+      8.1   desktop_action_manager.py — Real Native App Launcher
+      8.2   see_and_code.py           — Vision-Based Code Generation & Auto-Typing
+  9.  SUPPORTING MODULES
+      9.1   reasoning_engine.py    — Cognitive Strategy Layer
+      9.2   python_sandbox.py      — Knowledge-First Code Generator
+      9.3   telemetry.py           — Batched Trace Logging
+      9.4   logger.py              — Logging Configuration
+  10. FRONTEND
+      10.1  static/index.html      — Main Chat Interface
+      10.2  static/app.js          — Chat Logic & WebSocket Handler
+      10.3  static/style.css       — UI Styling & Animations
+      10.4  static/mode_switcher.js — Mode Management (Chat/Writer/Voice)
+      10.5  static/writer_mode.js  — Writer Mode (See & Code)
+      10.6  static/voice_mode.js   — Voice Mode Interface
+      10.7  static/logs.js         — Trace Log Viewer
+      10.8  static/logs_dashboard.html — Telemetry Dashboard
+  11. PROMPT ENGINEERING
+      11.1  prompts/orchestrator_prompt.md
+      11.2  prompts/router_prompt.md
+      11.3  prompts/verifier_prompt.md
+  12. TESTING
+      12.1  Test Suite Overview
+      12.2  Test Categories
+      12.3  Running Tests
+  13. EVALUATION FRAMEWORK
+      13.1  evals/eval_harness.py
+      13.2  evals/dataset.json
+  14. SCRIPTS & DEPLOYMENT
+      14.1  nightion.bat           — Windows Launcher
+      14.2  Dockerfile             — Container Build
+      14.3  scripts/release_gate.py— AST Invariant Checker
+      14.4  scripts/db_backup.py   — Database Backup
+  15. CONFIGURATION FILES
+  16. API REFERENCE
+  17. DATA FLOW WALKTHROUGH
+  18. SYSTEM PROTOCOL
+
+
+================================================================================
+  1. PROJECT OVERVIEW
+================================================================================
+
+Nightion is a fully offline AI coding assistant created by Nitin (solo 
+developer). It runs entirely on the user's local machine with no cloud 
+dependencies. The system uses the gemma4 language model served by Ollama to 
+provide:
+
+  - Conversational AI chat with reasoning transparency
+  - Code generation and explanation
+  - Data Structures & Algorithms (DSA) problem solving
+  - Desktop application control (open/close apps natively on Windows)
+  - Screen capture and vision-based code generation ("See & Code")
+  - Human-like auto-typing of generated code into external editors
+  - RAG (Retrieval-Augmented Generation) via ChromaDB vector store
+  - Persistent memory with SQLite truth graph
+  - Knowledge graph with confidence-based learning dynamics
+  - Comprehensive telemetry and trace logging
+  - Multi-mode interface: Chat Mode, Writer Mode, and Voice Mode
+
+Key Design Principles:
+  - Privacy-first: All processing happens locally. No data leaves the machine.
+  - Offline-first: Every feature works without an internet connection.
+  - Safety-first: Multi-layer security with guards, sandboxes, and capability
+    gates that prevent destructive actions.
+  - Streaming: Real-time token streaming over WebSocket for both reasoning and
+    response tokens, giving users live visibility into the AI's thinking.
+
+
+================================================================================
+  2. ARCHITECTURE OVERVIEW
+================================================================================
+
+The system follows a layered agent architecture:
+
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                        FRONTEND (Browser)                       │
+  │  index.html + app.js + style.css + mode_switcher.js             │
+  │  WebSocket (/ws/chat) for streaming chat                        │
+  │  REST APIs for screenshots, vision-code, health, config, etc.   │
+  └──────────────────────┬───────────────────────────────────────────┘
+                         │ HTTP / WebSocket
+  ┌──────────────────────▼───────────────────────────────────────────┐
+  │                    nightion_core.py (FastAPI)                    │
+  │  Routes, WebSocket handler, API endpoints, static file serving  │
+  └──────────────────────┬───────────────────────────────────────────┘
+                         │
+  ┌──────────────────────▼───────────────────────────────────────────┐
+  │                    orchestrator.py                               │
+  │  Builds conversation context from session history                │
+  │  Streams queries to Ollama with think-mode enabled              │
+  │  Forwards reasoning + response tokens to frontend via callback  │
+  └──────────────────────┬───────────────────────────────────────────┘
+                         │
+  ┌──────────────────────▼───────────────────────────────────────────┐
+  │                    Ollama (localhost:11434)                      │
+  │  gemma4 model with streaming NDJSON responses                   │
+  │  Separate "thinking" and "response" fields                      │
+  └─────────────────────────────────────────────────────────────────┘
+
+  Supporting layers (used by various modules):
+
+  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐
+  │  tool_router.py │  │  llm_adapter.py │  │  memory_core.py     │
+  │  Intent routing │  │  RAG + fallback │  │  SQLite truth graph │
+  │  via vectors    │  │  intelligence   │  │  Session history    │
+  └─────────────────┘  └─────────────────┘  └─────────────────────┘
+
+  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐
+  │  vector_store.py│  │  guards.py      │  │  verifier.py        │
+  │  ChromaDB +     │  │  Safety gates   │  │  Output validation  │
+  │  MiniLM-L6-v2   │  │  & risk eval    │  │  Tri-state checks   │
+  └─────────────────┘  └─────────────────┘  └─────────────────────┘
+
+
+================================================================================
+  3. DIRECTORY STRUCTURE
+================================================================================
+
+Nightion/
+├── nightion_core.py           # FastAPI app — main entry point
+├── orchestrator.py            # Query orchestration & Ollama streaming
+├── tool_router.py             # Semantic intent classification
+├── llm_adapter.py             # Hybrid RAG intelligence brain
+├── schemas.py                 # Pydantic models & enums
+├── config.py                  # Environment-based config (dev/staging/prod)
+├── config.json                # Runtime configuration (domains, voice settings)
+│
+├── memory_core.py             # SQLite truth graph (session chat, facts, etc.)
+├── memory_manager.py          # JSON-based stable memory
+├── knowledge_base.py          # Topic-hashed knowledge store (SQLite)
+├── knowledge_graph.py         # Concept graph with confidence dynamics
+├── vector_store.py            # ChromaDB + sentence-transformers
+├── context_injector.py        # Knowledge context injection into prompts
+├── retrieval_governor.py      # Domain-filtered retrieval
+│
+├── guards.py                  # Action risk evaluation & safety pre-checks
+├── sandbox.py                 # Isolated Python execution environment
+├── coding_sandbox.py          # Patch-based code modification sandbox
+├── capability_policy.py       # Capability levels & execution gates
+├── tool_permissions.py        # Tool permission contracts
+├── verifier.py                # Tri-state output verification
+│
+├── tool_action_manager.py     # Central tool execution registry
+├── desktop_action_manager.py  # Real native Windows app launcher
+├── see_and_code.py            # Vision-based code gen & human-like typing
+├── reasoning_engine.py        # Cognitive strategy layer
+├── python_sandbox.py          # Knowledge-first code generator
+├── telemetry.py               # Batched trace logging
+├── logger.py                  # Logging configuration
+│
+├── tools/                     # Tool adapters
+│   ├── code_runner.py         # Python code execution tool
+│   ├── search.py              # Web search tool (stub)
+│   └── desktop.py             # Desktop/app control tool
+│
+├── static/                    # Frontend files
+│   ├── index.html             # Main UI
+│   ├── app.js                 # Chat logic & WebSocket
+│   ├── style.css              # Styling (38KB+ of CSS)
+│   ├── mode_switcher.js       # Chat/Writer/Voice mode switching
+│   ├── writer_mode.js         # See & Code writer mode
+│   ├── voice_mode.js          # Voice interaction mode
+│   ├── logs.js                # Trace log viewer
+│   ├── logs_dashboard.html    # Telemetry dashboard
+│   └── fox.svg                # Nightion fox mascot icon
+│
+├── prompts/                   # System prompts
+│   ├── orchestrator_prompt.md
+│   ├── router_prompt.md
+│   └── verifier_prompt.md
+│
+├── tests/                     # Comprehensive test suite (37 test files)
+│   ├── conftest.py
+│   ├── test_router.py
+│   ├── test_sandbox.py
+│   ├── test_verifier.py
+│   ├── test_memory.py
+│   ├── test_safety_proofs.py
+│   ├── test_sandbox_malicious.py
+│   ├── test_app_control_gates.py
+│   ├── test_chaos.py
+│   ├── test_failure_injection.py
+│   ├── ... (30+ more test files)
+│   └── benchmarks.py
+│
+├── evals/                     # Evaluation framework
+│   ├── eval_harness.py
+│   ├── dataset.json
+│   └── eval_results.json
+│
+├── scripts/                   # Utility scripts
+│   ├── release_gate.py        # AST invariant checker
+│   └── db_backup.py           # Database backup utility
+│
+├── Dockerfile                 # Container build (Playwright base image)
+├── nightion.bat               # Windows one-click launcher
+├── run_nightion.bat            # Alternative launcher
+├── system_protocol.md         # Core system behavioral rules
+│
+├── memory/                    # Runtime memory databases
+├── cache/                     # Agent memory cache (JSON)
+├── chroma_db/                 # ChromaDB persistent vector store
+├── logs/                      # Telemetry trace logs
+├── brain_backups/             # Database backups
+│
+├── knowledge.db               # Knowledge base SQLite database
+├── domain_knowledge.db        # Domain governance database
+├── learning_tracker.db        # Learning tracker database
+└── memory_core.db             # Legacy memory database
+
+
+================================================================================
+  4. CORE MODULES
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  4.1  nightion_core.py — FastAPI Application & API Endpoints
+────────────────────────────────────────────────────────────────────────────────
+
+This is the main entry point of the application. It creates the FastAPI app 
+instance, initializes all core singletons, and defines every HTTP/WebSocket 
+endpoint.
+
+Key Responsibilities:
+  - Mounts the static file server at /static
+  - Serves the main UI at GET /
+  - WebSocket chat endpoint at /ws/chat (streaming AI responses)
+  - Health check, ping, stats, config APIs
+  - Screenshot capture and vision-code generation APIs
+  - See & Code pipeline endpoint
+  - Human-like typing endpoints (type-humanlike, type-anywhere)
+  - Telemetry/trace retrieval APIs
+  - Session history API
+
+Singleton Objects (created at module load):
+  - app:          FastAPI application instance
+  - memory_db:    MemoryManager (JSON-based)
+  - memory_core:  MemoryCore (SQLite-based)
+  - router:       ToolRouter (semantic intent classification)
+  - orchestrator: Orchestrator (query processing)
+
+WebSocket Chat Flow (/ws/chat):
+  1. Client sends JSON: { message, use_rag, session_id }
+  2. Server generates a unique trace_id
+  3. User message logged to MemoryCore
+  4. Conversation history fetched for context
+  5. AgentRequest constructed and passed to Orchestrator
+  6. Streaming callback forwards think_token and token messages to client
+  7. Final response logged and "done" signal sent
+
+Run Command:
+  python nightion_core.py
+    OR
+  uvicorn nightion_core:app --host 0.0.0.0 --port 8999 --reload
+
+
+────────────────────────────────────────────────────────────────────────────────
+  4.2  orchestrator.py — Query Orchestration & LLM Streaming
+────────────────────────────────────────────────────────────────────────────────
+
+The Orchestrator is the central intelligence coordinator. It receives queries 
+from the WebSocket handler, builds conversation context, and streams responses 
+from Ollama in real-time.
+
+Class: Orchestrator
+  __init__(router, max_retries=2, role=PRIMARY_ORCHESTRATOR)
+
+Primary Method: execute_task(request, forced_intent, ui_feedback_cb)
+  1. Extracts query and session_id from the request
+  2. Fetches up to 8 recent messages from session history for context
+  3. Logs the user message to MemoryCore
+  4. Calls _call_ollama_streaming() with the assembled prompt
+  5. Returns AgentResponse with the result
+
+Streaming Pipeline: _call_ollama_streaming(query, history_context, ui_callback)
+  - Constructs a full prompt with SYSTEM_PROMPT + conversation history + query
+  - Sends to Ollama at http://localhost:11434/api/generate with:
+      stream=True, think=True (native think-mode)
+  - Reads NDJSON lines from the streaming response
+  - For each line:
+      "thinking" field → forwarded as {type: "think_token", content: ...}
+      "response" field → forwarded as {type: "token", content: ...}
+      Inline <think>...</think> tags are extracted and forwarded separately
+  - Assembles the final result combining thinking and response buffers
+
+System Prompt:
+  "You are Nightion, a powerful AI coding assistant created by Nitin 
+   (solo developer). Your underlying model is gemma4 running entirely 
+   offline via Ollama..."
+
+Error Handling:
+  - ConnectionRefusedError → "Ollama is not running" message
+  - Empty response → "Model returned an empty response" warning
+  - General exceptions → descriptive error with troubleshooting steps
+
+
+────────────────────────────────────────────────────────────────────────────────
+  4.3  tool_router.py — Semantic Intent Classification
+────────────────────────────────────────────────────────────────────────────────
+
+Replaces traditional regex/if-else routing with cosine-similarity-based 
+semantic classification using the all-MiniLM-L6-v2 sentence-transformer model.
+
+Classification Pipeline (in priority order):
+  1. Hard Rule — Greeting:     Exact word match (hi, hello, hey, etc.)
+  2. Hard Rule — Browser:      DOM/navigation keywords (navigate to, click button)
+  3. Hard Rule — App Control:  OS verb + known app name (open notepad)
+  4. Semantic Similarity:      Vector cosine distance against seeded examples
+  5. Final Fallback:           Defaults to GENERAL intent
+
+Supported Intents (IntentEnum):
+  - GREETING            — Simple greetings
+  - CODE                — Code generation requests
+  - DSA                 — Data structure/algorithm explanations
+  - GENERAL             — Conversational/knowledge questions
+  - APP_CONTROL         — Desktop application management
+  - BROWSER_AUTOMATION  — Browser interaction commands
+
+Safety Features:
+  - APP_CONTROL false-positive blocker: If vector similarity classifies a query
+    as APP_CONTROL but it lacks both an OS verb AND a known app name, it's
+    downgraded to GENERAL. Prevents "write the formula for gravity" from 
+    opening an app.
+  - Anaphoric/possessive skip: Patterns like "gravity's formula" or "Newton's 
+    law" skip APP_CONTROL entirely to avoid false triggers.
+  - Destructive action detection: is_destructive_action() checks for keywords 
+    like delete, erase, format, purchase, etc.
+
+Vector Store Seeding:
+  - On first use, ~100+ canonical intent examples are embedded and stored in 
+    the ChromaDB "intents" collection
+  - Examples are re-seeded if the count changes (new examples added)
+
+RouterConfig:
+  - confidence_threshold: 0.35 (minimum cosine similarity to trust)
+  - use_llm_fallback: False (replaced by vector similarity)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  4.4  llm_adapter.py — Hybrid RAG Intelligence Brain
+────────────────────────────────────────────────────────────────────────────────
+
+The LLM adapter provides a two-layer hybrid intelligence system:
+
+Layer 1: Local Ollama + RAG
+  - Retrieves relevant chunks from ChromaDB vector store
+  - Injects chunks as CONTEXT into the Ollama system prompt
+  - Topic guard: only includes chunks whose topic keywords overlap with query
+  - Strips identity echo lines the model sometimes parrots from the system prompt
+
+Layer 2: Smart Fallback (Ollama offline)
+  - ChromaDB vector search with min_score=0.60
+  - Deterministic rules for: identity, frustration, math, time/date
+  - If no offline answer → returns None → triggers web search escalation
+
+Key Features:
+  - Runtime State Injection: Every LLM call samples live system state
+    (Ollama status, connectivity, model name) and injects it as a
+    [RUNTIME STATE] block into the system prompt
+  - Mode Question Interception: Questions like "are you online?" are answered
+    deterministically from runtime state BEFORE reaching the LLM
+  - Two-tier mode question detection:
+      Tier 1: Unambiguous multi-word phrases ("are you online or offline")
+      Tier 2: Keyword + question signal co-occurrence ("which model handles this")
+
+Class: LocalizedLLMAdapter
+  - generate_structured_thought(): Main entry point for all intents
+  - _try_ollama_conversational(): GENERAL intent — conversational with RAG
+  - _try_ollama(): CODE/DSA/SEARCH — JSON planner with RAG
+  - _smart_fallback(): Fallback when Ollama is offline
+  - _retrieve_context(): RAG retrieval with topic guard
+  - _strip_identity_echo(): Removes echoed identity text from responses
+
+
+────────────────────────────────────────────────────────────────────────────────
+  4.5  schemas.py — Pydantic Data Models & Enums
+────────────────────────────────────────────────────────────────────────────────
+
+All data structures are defined as Pydantic BaseModel classes with strict 
+validation. Key schemas:
+
+Enums:
+  StatusEnum:        ok, failed, blocked, needs_clarification
+  NextActionEnum:    respond, retry, ask_user, verify, run_tool
+  IntentEnum:        greeting, dsa, code, app_control, browser_automation, 
+                     general, delegate
+  AgentRole:         primary_orchestrator, research_specialist, code_executor
+  TaskResultStatus:  success, failed, incomplete, conflicting
+  MissionClass:      research, coding, web_scraping, local_admin, recovery,
+                     maintenance
+
+Core Request/Response Models:
+  AgentRequest:      trace_id, query, history, retry_count, created_at
+  AgentResponse:     trace_id, status, result, confidence, sources, error,
+                     next_action, tool_calls, metadata
+  RouterDecision:    trace_id, intent, confidence, reasoning, status
+  ToolResult:        trace_id, tool_name, status, output, error, 
+                     execution_time_ms, requires_confirmation, metadata
+  ThoughtSchema:     understanding, plan, steps, uncertainty, requires_tools,
+                     context_strategy
+  VerificationResult: trace_id, decision, status, confidence, reason,
+                      counterexample, suggested_fix, severity, trigger_reroute
+
+Frontend Schemas:
+  FrontendChatRequest:   message, use_rag, session_id
+  FrontendLearnRequest:  text, source
+  FrontendExecuteRequest: code, timeout
+
+Mission Schemas:
+  MissionProfile:        mission_id, mission_class, objective, success_criteria
+  CodingMissionProfile:  extends MissionProfile with task_type, target_files,
+                         test_suite_cmd, max_patch_size_bytes, max_retries
+  PatchExecutionContract: target_file, search_string, replacement_string
+  DomainPack:            pack_id, mission_class, version, ruleset, confidence
+
+
+────────────────────────────────────────────────────────────────────────────────
+  4.6  config.py — Environment-Based Configuration
+────────────────────────────────────────────────────────────────────────────────
+
+Three-tier configuration system controlled by the NIGHTION_ENV env variable:
+
+  DevConfig (default):
+    DEBUG=True, MAX_RETRIES=2, DB_PRAGMA="PRAGMA journal_mode=WAL;"
+
+  StagingConfig:
+    DEBUG=True, MAX_RETRIES=1, SEARCH_TIMEOUT=2.0
+
+  ProdConfig:
+    DEBUG=False, MAX_RETRIES=3, SEARCH_TIMEOUT=5.0
+
+Common Settings (ConfigSchema base):
+    MEMORY_DB_PATH = "memory_core.db"
+    BACKUP_DIR = "brain_backups"
+    SEARCH_TIMEOUT = 5.0
+    LLM_TEMPERATURE = 0.0
+
+
+================================================================================
+  5. MEMORY & KNOWLEDGE SYSTEM
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  5.1  memory_core.py — SQLite Truth Graph
+────────────────────────────────────────────────────────────────────────────────
+
+The primary persistent memory system using SQLite. Stores structured data 
+across six tables:
+
+  1. episodic:              Task traces with success/confidence metrics
+  2. patterns:              Learned strategies with pattern types
+  3. preferences:           User constraint rules with confidence scores
+  4. facts:                 Verified factual statements with injection flags
+  5. session_chat:          Immutable append-only conversation log
+  6. language_preferences:  Per-topic programming language preferences
+
+Key Methods:
+  - log_chat_event():             Append to session conversation log
+  - fetch_session_history():      Retrieve recent messages by session
+  - record_language_use():        UPSERT language preference with use_count
+  - get_language_preference():    Get most-used language for a topic category
+  - get_all_language_preferences(): Full preference map across all categories
+  - add_episodic_trace():         Record task outcomes for learning
+  - add_verified_fact():          Store verified facts with confidence
+  - fetch_recent_patterns():      Retrieve learned strategies
+
+Database Path: memory/nightion_memory.db
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.2  memory_manager.py — JSON-Based Stable Memory
+────────────────────────────────────────────────────────────────────────────────
+
+A simpler JSON-file-based memory system for stable facts and preferences.
+Stores only established facts, repeated corrections, and approved shortcuts.
+No raw chat noise to prevent context dilution.
+
+Storage Path: cache/agent_memory.json
+
+Methods:
+  - add_fact(fact):     Store a unique fact
+  - get_context():     Format all facts as context string
+  - get_stat_count():  Number of stored facts
+  - wipe_all():        Reset memory
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.3  knowledge_base.py — Topic-Hashed Knowledge Store
+────────────────────────────────────────────────────────────────────────────────
+
+SQLite-based knowledge store using SHA-256 topic hashing for O(1) lookups.
+Stores code snippets, explanations, and source attribution.
+
+Table Schema (knowledge):
+  topic_hash, topic, language, code, explanation, source_url, source_name,
+  trusted, needs_review, use_count, created_at
+
+Trusted Sources:
+  cp-algorithms.com, geeksforgeeks.org, codeforces.com, leetcode.com,
+  usaco.guide, atcoder.jp, en.wikipedia.org
+
+Methods:
+  - lookup(topic, language):       O(1) hash-based retrieval
+  - store(topic, code, ...):       Persist learned knowledge
+  - fuzzy_search(query, limit):    Keyword-based partial matching
+  - is_trusted_source(url):        Validate source trustworthiness
+
+Database Path: knowledge.db
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.4  knowledge_graph.py — Concept Graph with Confidence Dynamics
+────────────────────────────────────────────────────────────────────────────────
+
+A navigable concept graph stored in SQLite with bidirectional edges between 
+related knowledge nodes.
+
+Tables (added to nightion_memory.db):
+  knowledge_nodes: id, concept, summary, example, related_topics_json,
+                   learned_at, last_used, use_count, confidence, source_url
+  knowledge_edges: from_id, to_id, relationship_type, created_at
+
+Confidence Dynamics:
+  - On save: confidence = value from Processor (0.2–1.0)
+  - On successful use: confidence += 0.1
+  - On failed/corrected use: confidence -= 0.2
+  - Range clamped to [0.0, 2.0]
+
+Deduplication (Three-Path Logic):
+  Path A: Concept exists with high confidence (>=0.5) → bump last_seen only
+  Path B: Concept exists with low confidence (<0.5) → overwrite with fresh data
+  Path C: New concept → save as new node
+
+Key Functions:
+  - save_node():               UPSERT a knowledge node
+  - save_node_deduped():       Smart deduplication before save
+  - link_related():            Create bidirectional edges for related topics
+  - search_nodes():            Keyword-based search with relevance scoring
+  - is_unknown_topic():        Check if a topic is confidently known
+  - update_node_confidence():  Adjust confidence with clamping
+  - get_connected_nodes():     Graph traversal for related concepts
+  - get_learned_patterns_count(): Live DB counter for UI display
+  - get_total_chunks():        Total knowledge nodes count
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.5  vector_store.py — ChromaDB Vector Intelligence
+────────────────────────────────────────────────────────────────────────────────
+
+Real vector storage and retrieval using ChromaDB with sentence-transformers 
+(all-MiniLM-L6-v2) for semantic similarity.
+
+Collections:
+  - "knowledge":  Scraped/learned content (code, explanations, articles)
+  - "intents":    Canonical routing examples per IntentEnum value
+
+Core Operations:
+  - add(id, text, metadata, collection):    Embed and store text
+  - search(query, top_k, min_score):        Cosine similarity search
+  - count(collection):                      Real vector count
+  - delete(id, collection):                 Remove a vector
+
+Intent Routing:
+  - seed_intents(intent_examples):  Embed canonical examples for classification
+  - classify_intent(query):         Nearest-neighbour classification
+
+Text Chunking:
+  - chunk_text(text, max_tokens):   Split text into overlapping ~300-word chunks
+
+Similarity Scoring:
+  ChromaDB cosine distance → similarity: sim = 1 - dist/2
+
+Singleton Access: get_vector_store() returns the global VectorStore instance
+Persistent Storage: chroma_db/ directory
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.6  context_injector.py — Knowledge Context Injection
+────────────────────────────────────────────────────────────────────────────────
+
+On every query, searches the knowledge graph for relevant concepts, ranks them, 
+and injects the top 3 entries into the LLM prompt as learned context.
+
+Ranking Formula:
+  score = keyword_matches × confidence × log(1 + use_count)
+
+Confidence Update Signals:
+  "success" → +0.1  (knowledge was referenced in response)
+  "ignored" → -0.2  (knowledge was relevant but contradicted/ignored)
+  "failed"  → -0.1  (code generation failed entirely)
+
+Signal Inference:
+  - Empty/error response → "failed"
+  - Concept keywords appear in response → "success"
+  - Otherwise → "ignored"
+
+Functions:
+  - get_relevant_knowledge():       Search knowledge_nodes
+  - format_for_prompt():            Format as structured context block
+  - build_injected_context():       Combined search + format
+  - enrich_context():               Prepend knowledge to existing context
+  - update_used_knowledge():        3-level confidence update
+
+
+────────────────────────────────────────────────────────────────────────────────
+  5.7  retrieval_governor.py — Domain-Filtered Retrieval
+────────────────────────────────────────────────────────────────────────────────
+
+Filters knowledge retrieval by mission class (research, coding, web_scraping, 
+etc.), extracting only the newest verified domain packs.
+
+Methods:
+  - retrieve_domain_context():       Get active domain ruleset for a mission
+  - construct_planner_payload():     Build context with strategies, constraints,
+                                     facts, and session history
+
+
+================================================================================
+  6. SECURITY & SAFETY
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  6.1  guards.py — Action Risk Evaluation & Safety Pre-Check
+────────────────────────────────────────────────────────────────────────────────
+
+Two-layer safety system:
+
+Layer 1: evaluate_action(action_name, target, payload)
+  Risk Levels:
+    SAFE (scroll, read)        → Auto-allowed
+    MODERATE (open_app, click) → Auto-allowed
+    CRITICAL (close, write, submit, delete) → Blocked, requires confirmation
+
+  Destructive keyword detection: delete, rm, rmdir, format, drop, uninstall, 
+  overwrite
+
+Layer 2: pre_check_query(query)
+  Global safety pre-check that runs BEFORE any reasoning or routing.
+  Blocks queries containing: delete, format, rm -rf, drop table, mkfs, wipe, 
+  uninstall
+
+
+────────────────────────────────────────────────────────────────────────────────
+  6.2  sandbox.py — Isolated Python Execution
+────────────────────────────────────────────────────────────────────────────────
+
+Isolated execution environment for running Python code safely.
+
+Security Measures:
+  - Blocked imports: os, sys, subprocess, shutil, socket, pathlib
+  - Static and dynamic import scanning (__import__ calls)
+  - Subprocess execution with timeout (default: 3 seconds)
+  - Temporary file cleanup after execution
+
+Execution Flow:
+  1. Scan code for malicious imports → BLOCKED if found
+  2. Write code to temporary .py file
+  3. Execute via subprocess with capture_output=True
+  4. Parse return code, stdout, stderr
+  5. Clean up temporary file
+
+
+────────────────────────────────────────────────────────────────────────────────
+  6.3  coding_sandbox.py — Patch-Based Code Modification
+────────────────────────────────────────────────────────────────────────────────
+
+Strict patch-based code modification sandbox that prevents arbitrary code 
+execution. Uses search-and-replace patches with safety validation.
+
+Security Measures:
+  - File boundary verification: only allowed files can be modified
+  - Patch size limits: max 15KB per patch
+  - AST validation: Python patches are parsed before saving to prevent
+    syntax-breaking changes
+  - Test suite execution with timeout boundaries
+
+
+────────────────────────────────────────────────────────────────────────────────
+  6.4  capability_policy.py — Capability Levels & Execution Gates
+────────────────────────────────────────────────────────────────────────────────
+
+Four capability levels controlling what tools can execute:
+
+  ISOLATED:     No access to anything
+  RESTRICTED:   No network, no file I/O, no app control
+  STANDARD:     Safe APIs only, destructive payload detection
+  ELEVATED:     Write access with manual user confirmation required
+
+CapabilityGate.can_execute(tool_name, payload_args):
+  - Under RESTRICTED: blocks os_shell, file_write, network_request, app_control
+  - Under STANDARD: blocks destructive payloads (delete, format, rm -rf, drop)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  6.5  tool_permissions.py — Tool Permission Contracts
+────────────────────────────────────────────────────────────────────────────────
+
+Defines ToolContract dataclass that specifies:
+  - Tool name and description
+  - Whether user confirmation is required
+  - Payload validation rules
+
+
+────────────────────────────────────────────────────────────────────────────────
+  6.6  verifier.py — Tri-State Verification Layer
+────────────────────────────────────────────────────────────────────────────────
+
+The absolute authority validation layer that grades logical correctness and 
+prevents hallucinations. Returns explicit tri-state decisions.
+
+Verification Pipeline:
+  1. Semantic Intent Validation — catches intent mismatches
+     (e.g., searching when code generation was requested)
+  2. Immediate Failure Checks — FAILED or BLOCKED status
+  3. Malformed/Empty Validation — null/empty output detection
+  4. Chaos/Uncertainty Checks:
+     a. Stub Detection: catches placeholder/mock responses
+        ("execution complete", "simulated verification", "not implemented")
+     b. Confusion Detection: uncertain language in output
+  5. Success Endorsement (confidence: 0.90)
+
+Decisions: PASS, FAIL, UNCERTAIN
+Severities: low, medium, high
+
+Semantic Mismatch Detection:
+  - Catches "Search-instead-of-Code" anti-pattern: when a coding query
+    (with verbs like "write", "implement" + languages like "python", "java")
+    gets routed to search instead of code generation
+
+
+================================================================================
+  7. TOOL SYSTEM
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  7.1  tool_action_manager.py — Central Tool Execution Registry
+────────────────────────────────────────────────────────────────────────────────
+
+Central registry for all executable tools with multi-layer validation.
+
+Execution Pipeline:
+  1. Plugin Existence Check → mock fallback if not registered
+  2. Permission Contract Payload Guard → validates payload
+  3. User Confirmation Boundary → blocks if confirmation required
+  4. Capability Gate Evaluation → checks policy constraints
+  5. Dynamic Native Sandboxing → actual tool execution
+
+
+────────────────────────────────────────────────────────────────────────────────
+  7.2  tools/code_runner.py — Python Code Execution Tool
+────────────────────────────────────────────────────────────────────────────────
+
+Bridges the Orchestrator to the Sandbox for secure Python code execution.
+Configurable timeout (default: 5 seconds).
+
+
+────────────────────────────────────────────────────────────────────────────────
+  7.3  tools/search.py — Web Search Tool
+────────────────────────────────────────────────────────────────────────────────
+
+Agent tool adapter for web searches. Currently returns mock results as a 
+placeholder for future integration with search providers (DDG, Brave, etc.).
+
+
+────────────────────────────────────────────────────────────────────────────────
+  7.4  tools/desktop.py — Desktop/App Control Tool
+────────────────────────────────────────────────────────────────────────────────
+
+Agent tool adapter for local OS and application control. All actions must pass 
+through guards.py's evaluate_action() before execution.
+
+
+================================================================================
+  8. DESKTOP & VISION
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  8.1  desktop_action_manager.py — Real Native App Launcher
+────────────────────────────────────────────────────────────────────────────────
+
+Real Windows application launcher using subprocess.Popen. Maintains a 
+comprehensive registry of 40+ applications.
+
+App Categories:
+  - System:    notepad, calculator, paint, cmd, powershell, explorer, etc.
+  - Browsers:  chrome, firefox, edge, brave
+  - Dev Tools: vscode, git bash, windows terminal
+  - Media:     vlc, spotify, obs, steam
+  - Office:    word, excel, powerpoint
+  - Messaging: whatsapp, telegram, zoom, slack, discord, teams
+
+Resolution Strategy:
+  1. Direct registry match (static APP_REGISTRY dict)
+  2. Partial match in registry
+  3. Dynamic lookup via shutil.which + Windows Registry (App Paths)
+  4. Common per-user install directories (AppData)
+  5. Last resort: pass raw name to OS
+
+Special Handling:
+  - Multi-arg entries (Discord, Teams) via Update.exe --processStart
+  - UWP/protocol handlers (ms-settings:, camera:)
+  - MMC snap-ins (.msc files)
+  - Username-templated paths ({user} → actual Windows username)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  8.2  see_and_code.py — Vision-Based Code Generation & Auto-Typing
+────────────────────────────────────────────────────────────────────────────────
+
+The "See & Code" pipeline: screenshot → AI vision analysis → code extraction 
+→ human-like typing into external editors.
+
+Four Components:
+
+1. Screen Capture (capture_screen):
+   - Alt+Tab to target window first
+   - Screenshot via pyautogui
+   - Alt+Tab back to Nightion
+   - Resize to max 1280px width
+   - Returns base64 PNG string
+
+2. Multimodal Code Generation (generate_code_from_image):
+   - Sends screenshot to gemma4 vision model via Ollama
+   - Prompt instructs: "Read the problem from the screenshot, write COMPLETE 
+     WORKING solution, ONLY code in a fenced block"
+   - Two attempts: concise prompt first, then detailed retry with higher 
+     num_predict
+   - Strips <think>...</think> tags from model output
+   - Extracts code from fenced code blocks (language-specific → generic → raw)
+   - Supports 10 languages: Python, C++, C, Java, JavaScript, TypeScript, C#,
+     Go, Rust, SQL
+
+3. Human-Like Typing (type_code_humanlike):
+   - Types char-by-char using pynput keyboard controller
+   - Realistic timing: 35-70ms base, extra delay for newlines/brackets
+   - Burst mode: ~8% chance to type 5-8 chars at 10-20ms (fast typing)
+   - Typo simulation: ~4% chance after 50+ chars, QWERTY neighbor keys,
+     followed by backspace and correction
+   - Protected characters (;{}[]()=<>:, etc.) never get typo'd
+   - Protected keywords (def, class, return, etc.) never get typo'd
+   - Indentation stripping for online editor compatibility
+   - Cancel support via threading.Event
+
+4. External Click Listener (wait_for_external_click_then_type):
+   - Uses pynput mouse listener to wait for user click
+   - After click detected, begins human-like typing
+   - Configurable timeout (default: 60 seconds)
+   - Supports cancellation
+
+
+================================================================================
+  9. SUPPORTING MODULES
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  9.1  reasoning_engine.py — Cognitive Strategy Layer
+────────────────────────────────────────────────────────────────────────────────
+
+Thin wrapper around LocalizedLLMAdapter that dispatches queries to the LLM 
+for structured thought generation. Produces ThoughtSchema objects containing 
+understanding, plan, steps, uncertainty, and context strategy.
+
+
+────────────────────────────────────────────────────────────────────────────────
+  9.2  python_sandbox.py — Knowledge-First Code Generator
+────────────────────────────────────────────────────────────────────────────────
+
+High-level code generation pipeline that prioritizes cached knowledge over 
+LLM generation.
+
+Generation Order:
+  1. Classify topic category (DSA, systems, scripting, general)
+  2. Read language preference from MemoryCore (not hardcoded)
+  3. Check local KnowledgeBase (O(1) hash lookup)
+  4. On miss → return "" for Ollama handoff
+
+Language Resolution:
+  1. Memory first (highest priority — learned from real history)
+  2. Query text detection (explicit language mentions)
+  3. None → ask user for preference
+
+Topic Classifier Categories:
+  - DSA: sorting, searching, trees, graphs, dynamic programming, etc.
+  - Systems: threads, sockets, memory, kernel, processes
+  - Scripting: file I/O, JSON, HTTP, APIs, regex
+  - General: everything else
+
+
+────────────────────────────────────────────────────────────────────────────────
+  9.3  telemetry.py — Batched Trace Logging
+────────────────────────────────────────────────────────────────────────────────
+
+Batched telemetry recording system that minimizes disk I/O.
+
+Each trace_id gets its own directory under logs/ containing:
+  - request.json:   Original query and timestamp
+  - router.json:    Intent classification decision
+  - plan.json:      Cognition/planning steps
+  - tool_runs.json: Execution step results
+  - response.json:  Final response with status and confidence
+
+Index File: logs/index.json tracks all trace IDs with timestamps and status.
+
+Features:
+  - Write buffering (flush every 5 mutations)
+  - atexit hook for guaranteed final flush
+  - Latency budget warnings when execution exceeds SEARCH_TIMEOUT
+
+
+────────────────────────────────────────────────────────────────────────────────
+  9.4  logger.py — Logging Configuration
+────────────────────────────────────────────────────────────────────────────────
+
+Standard Python logging setup for the Nightion application.
+
+
+================================================================================
+  10. FRONTEND
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  10.1  static/index.html — Main Chat Interface
+────────────────────────────────────────────────────────────────────────────────
+
+The primary web UI served at http://127.0.0.1:8999/. Features:
+  - Chat message area with markdown rendering
+  - Code block syntax highlighting with copy buttons
+  - Reasoning block display (collapsible thinking sections)
+  - Mode switcher tabs (Chat, Writer, Voice)
+  - Animated fox mascot SVG
+  - Health status indicators
+  - Dark theme with orange accent colors
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.2  static/app.js — Chat Logic & WebSocket Handler
+────────────────────────────────────────────────────────────────────────────────
+
+30KB+ JavaScript handling:
+  - WebSocket connection to /ws/chat
+  - Real-time token streaming for both reasoning and response
+  - Markdown rendering with code block detection
+  - Reasoning block toggle (collapsible on click)
+  - Session management
+  - Health status polling
+  - Message history display
+  - Auto-scroll behavior
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.3  static/style.css — UI Styling
+────────────────────────────────────────────────────────────────────────────────
+
+38KB+ CSS with:
+  - Dark theme (#1a1a2e, #16213e backgrounds)
+  - Orange accent colors (#FF6B00, #ff8a00)
+  - Glassmorphism effects
+  - Smooth animations and transitions
+  - Responsive layout
+  - Code block styling with syntax highlighting
+  - Message bubble styling
+  - Reasoning block styling
+  - Fox mascot animations
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.4  static/mode_switcher.js — Mode Management
+────────────────────────────────────────────────────────────────────────────────
+
+Manages switching between three UI modes:
+  - Chat Mode:   Standard conversational AI interface
+  - Writer Mode: See & Code — screenshot-based code generation with auto-typing
+  - Voice Mode:  Voice interaction with animated fox
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.5  static/writer_mode.js — Writer Mode (See & Code)
+────────────────────────────────────────────────────────────────────────────────
+
+27KB+ JavaScript implementation of the See & Code feature:
+  - Capture screenshot of target window
+  - Display captured image in preview
+  - Generate code from screenshot via API
+  - Display generated code with syntax highlighting
+  - Language selection dropdown
+  - "Type Code" button to auto-type into external editor
+  - Cancel typing support
+  - Status indicators and progress feedback
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.6  static/voice_mode.js — Voice Mode Interface
+────────────────────────────────────────────────────────────────────────────────
+
+15KB+ JavaScript for voice interaction:
+  - Animated fox character that responds to state changes
+  - Matrix-style background animation
+  - Speech synthesis for AI responses
+  - Countdown timer animations
+  - Visual state transitions (idle → listening → speaking)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  10.7  static/logs.js & logs_dashboard.html — Telemetry Dashboard
+────────────────────────────────────────────────────────────────────────────────
+
+Trace log viewer and telemetry dashboard for inspecting:
+  - All request traces with timestamps
+  - Router decisions (intent, confidence, reasoning)
+  - Execution plans and tool runs
+  - Final responses with status
+
+
+================================================================================
+  11. PROMPT ENGINEERING
+================================================================================
+
+Three markdown prompt files in the prompts/ directory:
+
+  orchestrator_prompt.md:  System prompt for the main orchestrator
+  router_prompt.md:        Prompt template for intent classification
+  verifier_prompt.md:      Prompt for output verification
+
+
+================================================================================
+  12. TESTING
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  12.1  Test Suite Overview
+────────────────────────────────────────────────────────────────────────────────
+
+37 test files in the tests/ directory covering every layer of the system.
+
+
+────────────────────────────────────────────────────────────────────────────────
+  12.2  Test Categories
+────────────────────────────────────────────────────────────────────────────────
+
+Core Functionality:
+  test_router.py                   — Intent classification accuracy
+  test_router_adversarial.py       — Adversarial routing edge cases
+  test_sandbox.py                  — Sandbox execution correctness
+  test_sandbox_malicious.py        — Malicious code blocking
+  test_verifier.py                 — Output verification logic
+  test_verifier_override.py        — Verifier override scenarios
+  test_memory.py                   — Memory persistence and retrieval
+  test_search.py                   — Search tool adapter
+
+Safety & Security:
+  test_safety_proofs.py            — Safety pre-check proofs
+  test_app_control_gates.py        — App control safety gates
+  test_app_control.py              — App control functionality
+
+Hardened Tests (Multi-Phase):
+  test_phase28_memory_hardened.py   — Phase 28 memory system hardening
+  test_phase28_routing.py           — Phase 28 routing improvements
+  test_phase29_knowledge_hardened.py— Phase 29 knowledge system hardening
+  test_phase30_app_aliases.py       — Phase 30 app alias resolution
+  test_phase30_learning_api.py      — Phase 30 learning API
+
+Robustness:
+  test_chaos.py                    — Chaos engineering tests
+  test_failure_injection.py        — Failure injection scenarios
+  test_code_execution_robustness.py— Code execution edge cases
+
+Integration:
+  test_mock_llm_integration.py     — Mock LLM integration tests
+  test_orchestrator_browser.py     — Orchestrator + browser tests
+  test_websocket.py                — WebSocket communication tests
+  test_browser_smoke.py            — Browser smoke tests
+  test_task_bus_integration.py     — Task bus integration
+
+Governance & Performance:
+  test_knowledge_governance.py     — Knowledge governance rules
+  test_memory_governor.py          — Memory governor constraints
+  test_performance_layer.py        — Performance benchmarks
+  test_trace_logging.py            — Trace logging verification
+
+Infrastructure:
+  test_nightion_fixes.py           — Regression fix validation
+  test_regression_replay.py        — Regression replay scenarios
+  test_restore_drill.py            — Database restore drills
+
+Evaluations:
+  eval_missions.py                 — Mission evaluation
+  eval_coding_missions.py          — Coding mission evaluation
+  eval_scheduled_missions.py       — Scheduled mission evaluation
+  eval_scorecard.py                — Evaluation scoring
+  benchmarks.py                    — Performance benchmarks
+
+
+────────────────────────────────────────────────────────────────────────────────
+  12.3  Running Tests
+────────────────────────────────────────────────────────────────────────────────
+
+  # Run all tests:
+  pytest tests/ -v
+
+  # Run a specific test file:
+  pytest tests/test_router.py -v
+
+  # Run with verbose output:
+  pytest tests/ -v --tb=long
+
+  # Run safety tests only:
+  pytest tests/test_safety_proofs.py tests/test_sandbox_malicious.py -v
+
+
+================================================================================
+  13. EVALUATION FRAMEWORK
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  13.1  evals/eval_harness.py
+────────────────────────────────────────────────────────────────────────────────
+
+Evaluation harness for running standardized tests against the Nightion system.
+Reads test cases from dataset.json, executes them, and records results.
+
+
+────────────────────────────────────────────────────────────────────────────────
+  13.2  evals/dataset.json
+────────────────────────────────────────────────────────────────────────────────
+
+Test dataset containing evaluation cases for measuring system accuracy and 
+performance across different intents and query types.
+
+Results stored in: evals/eval_results.json
+
+
+================================================================================
+  14. SCRIPTS & DEPLOYMENT
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+  14.1  nightion.bat — Windows Launcher
+────────────────────────────────────────────────────────────────────────────────
+
+One-click Windows launcher that:
+  1. Kills any existing process on port 8999
+  2. Restarts Ollama (kills previous instances, starts fresh)
+  3. Waits for port release
+  4. Starts uvicorn server with --reload
+  5. Opens browser to http://127.0.0.1:8999 after 8s delay
+
+Usage: Double-click nightion.bat
+
+
+────────────────────────────────────────────────────────────────────────────────
+  14.2  Dockerfile — Container Build
+────────────────────────────────────────────────────────────────────────────────
+
+Based on Microsoft Playwright Python image for Chromium support.
+  - Creates restricted non-root user (nightion_sandbox)
+  - Installs pinned Python dependencies
+  - Copies application code
+  - Entry point: python server.py
+
+
+────────────────────────────────────────────────────────────────────────────────
+  14.3  scripts/release_gate.py — AST Invariant Checker
+────────────────────────────────────────────────────────────────────────────────
+
+Static analysis tool that verifies architectural invariants using Python AST:
+  - Memory isolation: ensures SubAgents don't call store_pattern, 
+    log_chat_event, update_schema, or append_experience from TaskBus
+  - Verifier bypass detection: checks that action routines mandate 
+    ActionVerifier
+
+Run: python scripts/release_gate.py
+
+
+────────────────────────────────────────────────────────────────────────────────
+  14.4  scripts/db_backup.py — Database Backup
+────────────────────────────────────────────────────────────────────────────────
+
+Utility for backing up SQLite databases to the brain_backups/ directory.
+
+
+================================================================================
+  15. CONFIGURATION FILES
+================================================================================
+
+config.json:
+  - js_rendered_domains: List of domains requiring JavaScript rendering
+    (geeksforgeeks, leetcode, hackerrank, etc.)
+  - voice_mode settings: theme color, fox sizes, matrix animation speeds,
+    countdown seconds
+
+system_protocol.md:
+  - Core behavioral rules for the AI agent
+  - Workflows for DSA/coding, code generation, web search, app control
+  - Memory protocol and answer style guidelines
+
+
+================================================================================
+  16. API REFERENCE
+================================================================================
+
+REST Endpoints:
+
+  GET  /                           → Serve main UI (index.html)
+  GET  /api/ping                   → Health ping (returns { ping: "pong" })
+  GET  /api/health                 → System health (Ollama status, model)
+  GET  /api/stats                  → System statistics
+  GET  /api/config                 → Runtime configuration
+  POST /api/execute                → Execute code in sandbox
+  DELETE /api/history              → Clear conversation history
+  GET  /api/session/history        → Get session chat history
+
+Vision & Typing Endpoints:
+
+  POST /api/screenshot             → Capture screen + vision analysis
+  POST /api/vision-code            → Generate code from analysis text
+  POST /api/see-and-code           → Full pipeline: screenshot → code
+  POST /api/type-humanlike         → Human-like typing of code
+  POST /api/type-humanlike/cancel  → Cancel typing session
+  POST /api/type-anywhere          → Clipboard paste or typewrite fallback
+
+Telemetry Endpoints:
+
+  GET  /api/traces                 → List all trace IDs
+  GET  /api/traces/{trace_id}      → Get full trace details
+  GET  /api/logs/index             → List traces (legacy)
+  GET  /api/logs/{trace_id}/{art}  → Get specific trace artifact
+
+WebSocket Endpoint:
+
+  WS   /ws/chat                    → Streaming chat (send JSON, receive tokens)
+
+  Client → Server Message:
+    { message: "...", use_rag: true, session_id: "default_session" }
+
+  Server → Client Messages:
+    { type: "think_token", content: "..." }   — reasoning token
+    { type: "token", content: "..." }         — response token
+    { type: "done", rag_used: bool, trace_id: "..." }  — completion signal
+    { type: "error", content: "..." }         — error message
+
+
+================================================================================
+  17. DATA FLOW WALKTHROUGH
+================================================================================
+
+Complete flow for a user chat message:
+
+  1. User types message in browser UI (static/app.js)
+  2. app.js sends JSON via WebSocket to /ws/chat
+  3. nightion_core.py receives the message
+     a. Generates unique trace_id (UUID4)
+     b. Logs user message to MemoryCore.session_chat
+     c. Fetches last 10 messages of session history
+     d. Constructs AgentRequest
+  4. Orchestrator.execute_task() is called
+     a. Fetches 8 recent messages for conversation context
+     b. Logs user message again to its own MemoryCore
+     c. Builds full prompt: SYSTEM_PROMPT + history + query
+  5. Orchestrator._call_ollama_streaming() sends to Ollama
+     a. HTTP POST to http://localhost:11434/api/generate
+     b. stream=True, think=True, temperature=0.7, num_predict=2048
+  6. Ollama streams NDJSON lines back
+     a. Each line parsed for "thinking" and "response" fields
+     b. thinking tokens → ui_callback({type: "think_token", ...})
+     c. response tokens → ui_callback({type: "token", ...})
+     d. Inline <think>...</think> tags extracted and forwarded
+  7. ui_callback (in nightion_core.py) forwards to WebSocket
+     a. websocket.send_json({type: "think_token", content: ...})
+     b. websocket.send_json({type: "token", content: ...})
+  8. app.js receives tokens in real-time
+     a. think_tokens displayed in collapsible reasoning block
+     b. tokens accumulated and rendered as markdown
+  9. When Ollama sends done=true:
+     a. Orchestrator assembles final result string
+     b. If thinking was present: "<think>...</think>\n\nresponse"
+     c. Response logged to MemoryCore.session_chat
+  10. nightion_core.py sends final "done" message to WebSocket
+  11. app.js handles "done": finalizes rendering, enables input
+
+
+================================================================================
+  18. SYSTEM PROTOCOL
+================================================================================
+
+From system_protocol.md — the behavioral rules Nightion follows:
+
+Primary Goals:
+  1. Understand the user's intent exactly
+  2. Answer correctly
+  3. Verify important facts
+  4. Avoid hallucinations
+  5. Use tools when needed
+  6. Act carefully when controlling apps
+
+Core Rules:
+  - Never guess when uncertain
+  - Search trusted sources when unsure
+  - Verify with multiple sources for important information
+  - Prefer official docs, primary sources, standards, textbooks
+  - Report conflicts between sources
+
+DSA/Coding Workflow:
+  1. Restate the problem
+  2. Identify pattern
+  3. Consider brute force
+  4. Optimize
+  5. Handle edge cases
+  6. Explain correctness
+  7. Provide time/space complexity
+  8. Write code
+  9. Dry run/test mentally
+
+Answer Style:
+  - Direct, accurate, and structured
+  - Simple language
+  - Step-by-step explanations when helpful
+  - Include complexity and edge cases for coding tasks
+  - Describe what was done for action tasks
+
+
+================================================================================
+  END OF DOCUMENTATION
+================================================================================
+
+Document generated for Nightion v30.0
+Created by: Nitin (solo developer)
+Model: gemma4 via Ollama (fully offline)
